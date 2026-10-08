@@ -145,6 +145,45 @@ textarea::placeholder{color:#A0AEC0}
 .copybox{border:1.5px dashed #A5B4FC;background:#F8FAFF;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#0F172A;color:#fff;border-radius:999px;padding:10px 18px;font-size:14px;z-index:50}
 [hidden]{display:none!important}
+.mainnav{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;align-self:flex-start;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.mainnav button{border:0;background:transparent;color:var(--sub);font-size:15px;font-weight:700;border-radius:10px;padding:10px 18px}
+.mainnav button[aria-current="page"]{background:var(--blue);color:#fff}
+.livechip{background:#ECFDF5;border:1px solid #A7F3D0;color:var(--greenInk);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800}
+.obtn.blue{border-color:#BFD3FF;color:var(--blue);background:var(--blueSoft)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .box{background:#fff;border-radius:22px;max-width:520px;width:100%;padding:28px;display:flex;flex-direction:column;gap:16px;max-height:90vh;overflow:auto}
+.mid-lv{display:flex;align-items:baseline;gap:14px}
+.mid-lv b{font-size:52px;font-weight:900;color:var(--blue);line-height:1;letter-spacing:-.03em}
+.ladder{display:grid;grid-template-columns:repeat(9,1fr);gap:3px}
+.ladder span{font-size:10px;font-weight:800;text-align:center;padding:6px 0;border-radius:5px;background:#EEF2F7;color:var(--mute)}
+.ladder span.me{background:var(--blue);color:#fff}
+.ladder span.tg{box-shadow:0 0 0 2px var(--green) inset;color:var(--greenInk)}
+.stats.s3{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:0}
+.fhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.fgroup{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+.fgroup:first-child{border-top:0;margin-top:0;padding-top:0}
+.fgroup h3{margin:0;font-size:17px}
+.fgroup .when{font-size:13px;color:var(--sub);margin:2px 0 10px}
+.frow{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px dashed var(--line)}
+.frow .tx{flex:1;min-width:0}
+.frow .en{font-size:17px;font-weight:800}
+.frow .ko{font-size:14px;color:var(--sub)}
+.frow .ex{font-size:14px;margin-top:4px;color:#334155}
+.ib{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--soft);display:grid;place-items:center;flex:none;color:var(--ink)}
+.ib svg{width:18px;height:18px}
+.ib.on{background:#FEF3C7;border-color:#FCD34D;color:#B45309}
+.fcard{border:1px solid var(--line);border-radius:18px;background:var(--soft);min-height:220px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;cursor:pointer}
+.fcard .big{font-size:24px;font-weight:800}
+.fcard .ex{font-size:15px;color:#334155}
+.fcard .sit{font-size:13px;color:var(--blue);font-weight:700}
+.btnrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.btnrow button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 6px;font-size:15px;font-weight:700;color:var(--ink)}
+.btnrow button.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btnrow button.rec{background:var(--red);border-color:var(--red);color:#fff}
+.nowplay{font-size:22px;font-weight:800;text-align:center;min-height:64px}
+@media (max-width:820px){.stats.s3{grid-template-columns:repeat(3,minmax(0,1fr))}.mid-lv b{font-size:44px}}
 @media (max-width:820px){
   .card{padding:22px 18px;border-radius:18px}
   .hero{padding:28px 22px}
@@ -174,6 +213,7 @@ textarea::placeholder{color:#A0AEC0}
 </head>
 <body>
 <div class="page">
+<nav class="mainnav" id="mainnav"><button data-p="setup" aria-current="page">모의평가</button><button data-p="filler">필러 학습</button></nav>
 
 <!-- ================= SETUP ================= -->
 <div id="setup" style="display:flex;flex-direction:column;gap:22px">
@@ -233,12 +273,43 @@ textarea::placeholder{color:#A0AEC0}
   </section>
 </div>
 
+<!-- ================= FILLER ================= -->
+<div id="filler" hidden style="display:flex;flex-direction:column;gap:22px">
+  <section class="hero" style="padding:30px 32px">
+    <span class="pill">말이 막힐 때 침묵 대신</span>
+    <h1 style="font-size:clamp(24px,3.4vw,32px)">자주 쓰는 필러 <span id="fTotal"></span>개 마스터</h1>
+    <p>말하기 평가에서 길게 말이 끊기면 유창성에 불리합니다. 상황별 필러를 입에 붙여 두면 생각할 시간을 벌면서도 자연스럽게 이어 말할 수 있어요. 단, 한 답변에 같은 필러를 반복하지 마세요.</p>
+    <div class="checks"><span id="fKnown">✓ 외운 필러 0개</span><span>✓ 카드로 말하기 연습</span><span>✓ 연속 듣기</span></div>
+  </section>
+  <section class="card">
+    <div class="fhead" style="margin-bottom:22px">
+      <button class="chip" data-fm="list" aria-pressed="true">상황별 목록</button>
+      <button class="chip" data-fm="card" aria-pressed="false">카드 말하기 연습</button>
+      <button class="chip" data-fm="listen" aria-pressed="false">연속 듣기</button>
+    </div>
+    <div id="fList"></div>
+    <div id="fCard" hidden>
+      <div class="fhead" style="margin-bottom:14px"><span class="f-l" style="margin:0">범위</span><button class="chip" data-fr="all" aria-pressed="true">전체</button><button class="chip" data-fr="unknown" aria-pressed="false">아직 못 외운 것만</button><span id="fPos" style="margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--sub)"></span></div>
+      <div class="fcard" id="fFace"></div>
+      <div class="btnrow" style="margin-top:14px"><button id="fPrev">이전</button><button class="rec" id="fRec">내 발음 녹음</button><button class="pri" id="fNext">다음</button></div>
+      <div class="playrow" id="fMyRow" hidden style="margin-top:12px"><span style="font-weight:700">내 발음</span><audio id="fMy" controls></audio><button class="sbtn" id="fNative">원어민 듣기</button></div>
+      <p class="hint" style="text-align:center">한글 뜻을 보고 영어 필러로 예문을 먼저 말해 본 뒤, 카드를 눌러 확인하세요.</p>
+    </div>
+    <div id="fListen" hidden>
+      <p style="margin:0 0 14px;color:var(--sub);font-size:14px">필러 → 예문 → 한글 뜻 순서로 계속 읽어 줍니다. 출퇴근길이나 조깅할 때 이어폰으로 들어 보세요.</p>
+      <div class="nowplay" id="fNow">재생을 누르면 시작합니다</div>
+      <div class="hint" id="fNowKo" style="text-align:center;margin-bottom:16px"></div>
+      <div class="btnrow"><button id="fLPrev">이전</button><button class="pri" id="fLPlay">재생</button><button id="fLNext">다음</button></div>
+    </div>
+  </section>
+</div>
+
 <!-- ================= TEST ================= -->
 <div id="test" hidden style="display:flex;flex-direction:column;gap:22px">
   <div class="card topbar">
     <span class="qbadge" id="qBadge">Q1 / 15</span>
-    <span class="catchip" id="qCat">자기소개 (Warm-up)</span>
-    <div class="tb-r"><button class="obtn" id="capBtn">질문 텍스트 보기</button><button class="obtn red" id="quitBtn">중단</button></div>
+    <span class="catchip" id="qCat">자기소개 (Warm-up)</span><span class="livechip" id="liveChip" hidden></span>
+    <div class="tb-r"><button class="obtn blue" id="midBtn">중간 채점</button><button class="obtn" id="capBtn">질문 텍스트 보기</button><button class="obtn red" id="quitBtn">중단</button></div>
   </div>
   <div class="tgrid">
     <section class="card left">
@@ -330,6 +401,18 @@ textarea::placeholder{color:#A0AEC0}
 
 </div>
 
+<div class="modal" id="mid" hidden>
+  <div class="box">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="pill" style="color:var(--blue);background:var(--blueSoft);border-color:#BFD3FF">중간 채점</span><span id="midCnt" style="font-size:13px;color:var(--sub)"></span></div>
+    <div class="mid-lv"><b id="midLv">IM2</b><span id="midMsg" style="font-size:15px;color:var(--sub)"></span></div>
+    <div class="ladder" id="midLadder"></div>
+    <div class="stats s3"><div class="stat"><small>평균 발화</small><b id="midSec">0초</b></div><div class="stat"><small>평균 단어</small><b id="midW">0</b></div><div class="stat"><small>연결어/문항</small><b id="midC">0</b></div></div>
+    <div class="warnline" id="midTip" style="background:#F5F8FF;border-color:#DBE5FF;color:#1E3A8A"></div>
+    <div class="warnline" id="midWarn" hidden></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button class="next" id="midEnd" style="background:#0F172A;font-size:15px">여기서 종료·결과 보기</button><button class="next" id="midGo" style="font-size:15px">계속 풀기</button></div>
+  </div>
+</div>
+
 <script>
 /* ===================== QUESTION BANK ===================== */
 const T = { // answer templates by type
@@ -342,7 +425,7 @@ const T = { // answer templates by type
  opin:{t:"의견 3단 템플릿",s:[["결론","In my opinion, ~."],["이유+예시","The main reason is that ~. For example, ~."],["반론 인정·마무리","Of course, ~. But overall, I think ~."]]},
 };
 const FILL = {
- intro:["Well,","Let me introduce myself.","To be honest,","These days,"],
+ intro:["Well,","Let me introduce myself.","Outside of work,","These days,"],
  desc:["Let me see.","When you walk in,","On top of that,","My favorite part is"],
  past:["How can I put it?","At first,","Then suddenly,","Since then,"],
  comp:["Back in the day,","These days,","For example,","On the other hand,"],
@@ -352,61 +435,111 @@ const FILL = {
 };
 const Q = {
  intro:{type:"intro",cat:"자기소개 (Warm-up)",q:"Let's start the interview. Please tell me a little bit about yourself.",ko:"자기소개를 해 주세요.",
-  a:"Sure. My name is Daewoung, and I work for Samsung Fire and Marine Insurance as a field sales manager. My main job is to recruit new insurance agents and help them grow. I really enjoy it because every agent has a different story. These days, I'm studying English because I want to communicate better in global situations. That's a little bit about me."},
+  a:"Sure. My name is Daewoung, and I'm an executive at Samsung Fire and Marine Insurance. I'm in charge of a large sales organization of insurance agents. My main job is to recruit new agents, train them, and help our managers improve their performance. I really enjoy my work because I can help people build their careers. Outside of work, I love playing golf, and I go jogging almost every evening. These days, I'm studying English because I want to communicate better with global partners. That's a little bit about me."},
  office:{type:"desc",cat:"사무실 묘사",q:"Describe your office. What does it look like, and what is your favorite place there?",ko:"사무실을 묘사하고 가장 좋아하는 곳을 말해 주세요.",
-  a:"My office is on the fifth floor of a building downtown. When you walk in, there's a big open space with about thirty desks. My desk is near the window, so I get a lot of sunlight. There are two meeting rooms and a small lounge. My favorite place is the lounge, because I can have coffee and chat with my team there. It's not fancy, but it's comfortable."},
+  a:"My office is on a high floor of our company building, so I have a great view of the city. When you walk in, there's a large desk by the window and a small meeting table for six people. Right outside my office, my team works in an open space. Honestly, I prefer to keep my door open, so anyone can come in and talk to me. My favorite place is that meeting table, because that's where I listen to branch managers and solve problems together. It's simple, but it's a very busy place."},
  workday:{type:"desc",cat:"업무 루틴",q:"Tell me about your typical workday. What do you do from morning to evening?",ko:"아침부터 저녁까지 하루 일과를 말해 주세요.",
-  a:"On a typical workday, I get to the office at around eight. First, I check the sales results from the day before. Then I have a morning meeting with branch managers. In the afternoon, I usually visit branches and talk with new agents. I listen to their problems and give them practical advice. In the evening, I prepare for the next day. It's busy, but I feel proud when a new agent succeeds."},
+  a:"On a typical workday, I get to the office at around seven thirty. First, I review the sales and recruiting results of our organization. Then I have a meeting with regional managers to check our goals and problems. In the afternoon, I often visit branches. I meet branch managers and new agents, and I listen to what they need. I also make decisions about training programs and incentives. After work, I go jogging along the river for about forty minutes. It's a long day, but jogging helps me clear my mind."},
  project:{type:"past",cat:"프로젝트 문제해결",q:"Tell me about a problem you had at work and how you solved it.",ko:"업무 중 겪은 문제와 해결 과정을 말해 주세요.",
-  a:"Last year, many new agents in one branch quit within three months. It was a big problem, because we had spent a lot of time training them. So I talked with each agent to find out why. Most of them said they felt alone after training. So we started a mentoring program and matched each new agent with an experienced agent. After six months, more new agents stayed with us. I learned that listening comes first."},
+  a:"Last year, we had a serious problem. Many new agents quit within their first three months. It was costly, because we had invested a lot of time and money in training them. So I asked our managers to interview every agent who left. We found that most of them felt alone after the training period. So we started a mentoring program and matched each new agent with an experienced one. We also gave managers a bonus when new agents stayed. Six months later, the retention rate improved a lot. I learned that the real answer usually comes from listening."},
  colleague:{type:"desc",cat:"동료 묘사",q:"Describe a colleague you respect. What is this person like?",ko:"존경하는 동료를 묘사해 주세요.",
-  a:"I really respect one of my branch managers. She has worked in sales for over fifteen years. She's calm, patient, and always well prepared. What I like most is how she treats new agents. She never gets angry, and she explains things step by step. Because of her, many new agents in her branch stay longer. I try to learn from her every day."},
+  a:"I really respect one of our regional managers. She has worked in insurance sales for over twenty years. She's calm, patient, and always well prepared. What I like most is the way she treats new agents. She never blames them. Instead, she explains things step by step and shows them how to do it. Because of her, agents in her region stay much longer than average. I often ask her for advice, and I try to lead people the way she does."},
  colleague2:{type:"past",cat:"동료 경험 (콤보)",q:"Tell me about a time when that colleague helped you. What happened?",ko:"그 동료가 당신을 도와준 경험을 말해 주세요.",
-  a:"A few years ago, I had to give a big presentation to senior executives. I was really nervous because it was my first time. She spent two evenings helping me practice. She gave me honest feedback and told me to use simple examples. On the day of the presentation, it went much better than I expected. Since then, I always practice out loud before important meetings."},
+  a:"When I was first promoted to an executive position, I had to present our annual strategy to the CEO. I was really nervous, because it was my first big presentation at that level. She spent two evenings helping me prepare. She told me to cut the numbers and tell real stories about our agents instead. On the day of the presentation, the CEO asked many questions, and I answered with confidence. It went much better than I expected. Since then, I always use real stories when I present."},
  room:{type:"role",cat:"회의실 예약 롤플레이",q:"You need to book a meeting room for your team. Call the office manager and ask three or four questions.",ko:"회의실 예약을 위해 담당자에게 3~4가지 질문하세요.",
-  a:"Hi, this is Daewoung from the sales team. I'm calling because I'd like to book a meeting room for next Tuesday afternoon. First, is there a room available for about fifteen people? Second, does it have a projector and a screen? Third, could we use it from two to four? Lastly, do I need to fill out a form? Thank you so much for your help."},
+  a:"Hi, this is Daewoung from the sales division. I'm calling because I'd like to book a meeting room for next Tuesday afternoon. We're having a meeting with our regional managers. First, is there a room available for about twenty people? Second, does it have a projector and a video conference system? Third, could we use it from two to five? And lastly, can we order coffee and snacks for the meeting? Thank you so much. I really appreciate your help."},
  roomP:{type:"roleP",cat:"문제 해결 롤플레이",q:"There's a problem. The room you booked has been double-booked. Call your team leader, explain the situation, and suggest two or three alternatives.",ko:"예약한 회의실이 중복 예약됐습니다. 팀장에게 상황을 설명하고 대안 2~3개를 제시하세요.",
-  a:"Hi, it's Daewoung. I'm afraid there's a problem with our meeting on Tuesday. The room I booked was double-booked by another team. I'm really sorry about that. Here are some options. First, we could use the smaller room on the third floor. Second, we could move the meeting to Wednesday morning. Or we could have an online meeting instead. Please let me know what works best for you."},
+  a:"Hi, it's Daewoung. I'm afraid there's a problem with our meeting on Tuesday. The room I booked was double-booked by another division, and they booked it first. I'm really sorry about that. Here are some options. First, we could use the smaller room on the fifth floor, but we'd need to bring extra chairs. Second, we could move the meeting to Wednesday morning. Or third, we could hold it online, since some managers are far away anyway. Please let me know what works best for you."},
  trip:{type:"past",cat:"출장 경험",q:"Tell me about a memorable business trip. Where did you go and what happened?",ko:"기억에 남는 출장 경험을 말해 주세요.",
-  a:"The most memorable business trip was to Busan two years ago. I went there to give training to new agents. On the first day, my laptop suddenly stopped working right before the session. At first, I panicked. Then I asked a local manager to lend me his laptop, and I gave the training using printed notes. Surprisingly, the agents liked it because it felt more personal. Since then, I always bring a backup."},
+  a:"The most memorable business trip was to Busan two years ago. I went there to give a speech at a big event for about three hundred agents. On the morning of the event, my laptop suddenly stopped working, and all my slides were on it. At first, I panicked. Then I decided to speak without slides and just tell stories from my career. Surprisingly, the agents loved it. Many of them said it felt more personal. After the event, I went jogging along Haeundae Beach. Since then, I always keep a backup, but I also rely less on slides."},
  change:{type:"comp",cat:"업무 환경 변화",q:"How has the way people work changed over the past ten years?",ko:"지난 10년간 일하는 방식은 어떻게 바뀌었나요?",
-  a:"Ten years ago, we used a lot of paper. Agents carried thick files to meet customers. But now, almost everything is digital. For example, customers sign contracts on a tablet, and I check sales results on my phone. Meetings are also often online. I think this change is mostly positive because we save time. However, we have less face-to-face time, so we need to keep good relationships in other ways."},
+  a:"The way we work has changed a lot. Ten years ago, our agents carried thick paper files to meet customers, and contracts took several days. But now, almost everything is digital. For example, customers sign contracts on a tablet, and I can check our sales results on my phone in real time. Also, many training sessions are held online now. I think this change is mostly positive, because we save time and costs. However, in insurance, trust is still built face to face, so we need to keep the human touch."},
  ai:{type:"opin",cat:"AI 기술 트렌드",q:"Some people say AI will replace many jobs within five years. What is your opinion?",ko:"5년 안에 AI가 많은 일자리를 대체한다는 의견에 대해 어떻게 생각하나요?",
-  a:"In my opinion, AI will change many jobs, but it won't replace all of them. The main reason is that some jobs need trust and relationships. For example, in insurance, customers want to talk with a real person before they make big decisions. Of course, AI can do simple and repetitive work faster than people. But overall, I think people who use AI well will do better than people who don't."},
+  a:"In my opinion, AI will change many jobs, but it won't replace all of them. The main reason is that some jobs depend on trust and relationships. For example, in insurance, customers want to talk with a real person before they make big financial decisions. Of course, AI can do simple and repetitive work much faster than people, like writing reports or answering basic questions. So I think the winners will be people who use AI well. That's why our company is training agents to use AI tools, and I'm learning them myself."},
  ai2:{type:"opin",cat:"AI 활용 (콤보)",q:"How is AI being used in your company or industry these days?",ko:"요즘 회사나 업계에서 AI를 어떻게 활용하나요?",
-  a:"These days, AI is used in many ways in my industry. For example, it helps us analyze customer data and recommend the right products. It also answers simple customer questions through chatbots. In my case, I use AI to write training materials and summarize reports. It saves me a lot of time. However, we still need people to check the results, because AI can make mistakes."},
+  a:"These days, AI is used in many ways in the insurance industry. For example, it analyzes customer data and recommends the right products. It also answers simple customer questions through chatbots, twenty-four hours a day. In my organization, we're testing AI to help new agents prepare for customer meetings. In my case, I use AI to draft training materials and summarize long reports. It saves me a lot of time. However, people still need to check the results, because AI can make mistakes."},
  remote:{type:"opin",cat:"근무 방식 의견",q:"Do you prefer working from home or working at the office? Why?",ko:"재택근무와 사무실 근무 중 무엇을 선호하나요?",
-  a:"Personally, I prefer working at the office. The main reason is communication. In my job, I need to talk with managers and agents face to face. It's much easier to solve problems quickly when we're in the same place. Also, I can focus better at the office. Of course, working from home is good for some tasks, like writing reports. So all in all, a mix of both would be ideal."},
+  a:"Personally, I prefer working at the office. The main reason is that my job is all about people. I need to meet managers and agents face to face, and I can read their feelings better in person. Also, problems get solved much faster when we're in the same room. Of course, working from home has some benefits. For example, it's good for writing reports or preparing strategies without interruptions. So all in all, I think a mix of both is ideal, but for leaders, being present matters."},
  env:{type:"opin",cat:"기업과 환경",q:"What do you think companies should do to protect the environment?",ko:"기업이 환경 보호를 위해 무엇을 해야 할까요?",
-  a:"I think companies have a big responsibility for the environment. First, they should reduce waste, like paper and plastic. For example, my company moved many paper forms to tablets, and it saved a lot of paper. Second, they should use more renewable energy. Of course, it costs money at first. But in the long run, it's good for both the company and society."},
+  a:"I think companies have a big responsibility for the environment. First, they should reduce waste, especially paper and plastic. For example, my company moved most paper contracts to tablets, and it saved millions of sheets of paper every year. Second, they should invest in renewable energy and eco-friendly products. In insurance, we can also support green businesses with better insurance terms. Of course, it costs money at first. But in the long run, it's good for both the company and society, and customers prefer responsible companies."},
  goal:{type:"opin",cat:"향후 목표",q:"What are your career goals for the next five years, and how will you achieve them?",ko:"향후 5년간의 커리어 목표와 실천 방법을 말해 주세요.",
-  a:"My goal for the next five years is to build a stronger sales organization. In particular, I want more new agents to stay and succeed. To do that, I'm going to improve our training program and use AI tools to support agents. I also want to improve my English, so I can learn from global insurance companies. It won't be easy, but I'll keep trying step by step."},
+  a:"My goal for the next five years is to build the strongest sales organization in our company. In particular, I want more new agents to stay and succeed. To do that, I'm going to improve our training system and use AI tools to support agents in the field. I also want to develop more great branch managers, because they make the biggest difference. Personally, I want to improve my English, so I can learn from global insurance companies. And of course, I'll keep jogging to stay healthy for all of this."},
  home:{type:"desc",cat:"사는 곳 묘사",q:"Describe the place where you live. What does it look like?",ko:"사는 곳을 묘사해 주세요.",
-  a:"I live in an apartment with my family. It's on the tenth floor, so we have a nice view of the park. When you walk in, there's a living room with a big sofa and a TV. We have three bedrooms and two bathrooms. My favorite place is the balcony, because I can drink coffee there in the morning. It's not very new, but it's quiet and comfortable."},
+  a:"I live in an apartment with my family. It's on a high floor, so we have a nice view of the river. When you walk in, there's a spacious living room with a big sofa and a TV. We have three bedrooms, and one of them is my study. My favorite place is the balcony, because I keep my golf clubs there and sometimes practice my swing. The best thing about my neighborhood is the jogging path along the river. I run there almost every evening."},
  weekend:{type:"desc",cat:"주말 루틴",q:"What do you usually do on weekends?",ko:"주말에는 보통 무엇을 하나요?",
-  a:"On weekends, I try to rest and spend time with my family. On Saturday mornings, I usually sleep a little longer. After breakfast, we sometimes go for a walk or eat out at a nice restaurant. On Sundays, I often play golf with my friends or practice at a driving range. In the evening, I prepare for the next week. Weekends help me recharge."},
+  a:"On weekends, I usually play golf. I go out with friends or business partners about twice a month, and we leave very early in the morning. On the other weekends, I practice at a driving range near my home. Golf is great because I can be outside for hours and talk with people in a relaxed way. On Sunday evenings, I go jogging and spend time with my family. Then I prepare for the next week. Weekends help me recharge."},
  stress:{type:"desc",cat:"스트레스 해소",q:"What do you do to relieve stress?",ko:"스트레스를 어떻게 푸나요?",
-  a:"Honestly, my job is quite stressful, so I need my own ways to relax. The first thing I do is take a long walk. Walking clears my mind. Also, I like reading before I go to bed. When I read, I can forget about work for a while. Sometimes I meet old friends and talk over dinner. After that, I always feel much better."},
+  a:"Honestly, managing a large organization can be very stressful, so I need my own ways to relax. The best one for me is jogging. Almost every evening, I run along the river for about forty minutes. When I run, I can forget about sales numbers and just focus on my breathing. Also, golf helps me a lot. Being on a green course for a few hours really calms me down. After a good run or a round of golf, I always feel much better."},
  health:{type:"desc",cat:"건강 관리",q:"What do you do to stay healthy?",ko:"건강을 위해 무엇을 하나요?",
-  a:"To stay healthy, I try to do three things. First, I walk at least eight thousand steps a day. Second, I try not to eat late at night. Third, I go to bed before midnight. It's not easy because I have many dinner meetings. But I believe health is the most important thing, so I keep trying."},
+  a:"To stay healthy, I try to do three things. First, I go jogging almost every evening, about five kilometers. Second, I play golf on weekends, and I usually walk the course instead of using a cart. Third, I try not to eat late at night, although it's not easy because I have many business dinners. I believe a leader needs good energy, so health is my top priority. Thanks to jogging, I sleep better and I have more energy at work."},
  travel:{type:"past",cat:"여행 경험",q:"Tell me about a memorable trip you took. Where did you go and what happened?",ko:"기억에 남는 여행을 말해 주세요.",
-  a:"The most memorable trip was to Jeju Island a few years ago. I went there with my family in the summer. On the second day, we climbed Hallasan. It was much harder than I expected, and it started to rain halfway up. We almost gave up, but we kept going and finally reached the top. When we saw the view, we all cheered. Since then, whenever things get hard, I remember that day."},
+  a:"The most memorable trip was a golf trip to Jeju Island with my old friends a few years ago. On the first day, the weather was perfect, and I made the best score of my life. But on the second day, a strong wind came from the sea. My ball kept flying in the wrong direction, and I lost five balls. At first, I was really frustrated. But we all started laughing at each other, and it became the funniest round ever. Since then, whenever things go wrong, I remember that day and try to laugh."},
  travel2:{type:"past",cat:"여행 중 문제 (콤보)",q:"Have you ever had a problem while traveling? What happened and how did you deal with it?",ko:"여행 중 문제를 겪은 적이 있나요? 어떻게 해결했나요?",
-  a:"Yes, I have. A few years ago, my flight home was cancelled because of a typhoon. At first, I was really upset because I had an important meeting the next day. Then I called the airline and asked about other options. They put me on the first flight the next morning. So I called my team and moved the meeting to the afternoon. Since then, I always check the weather before I travel."},
+  a:"Yes, I have. A few years ago, my flight home from Jeju was cancelled because of a typhoon. I was really worried, because I had an important meeting with regional managers the next morning. First, I called the airline and asked about other flights. They put me on the first flight the next morning. Then I called my team and moved the meeting to the afternoon. In the end, everything was fine. Since then, I always check the weather and leave some extra time when I travel."},
  restaurant:{type:"desc",cat:"좋아하는 식당",q:"Tell me about a restaurant you like. What kind of food does it serve, and why do you like it?",ko:"좋아하는 식당과 그 이유를 말해 주세요.",
-  a:"There's a Korean barbecue restaurant near my office that I really like. It's a small, family-run place. They serve really good pork belly and spicy soybean paste stew. What I like most is that the owner is very friendly and remembers my order. It's also a great place to have dinner with my team. Whenever we have something to celebrate, we go there."},
+  a:"There's a Korean beef restaurant near my office that I really like. It's a quiet place with private rooms, so it's perfect for business dinners. They serve excellent grilled beef and a great cold noodle dish. What I like most is the owner. He always remembers what I like and takes good care of my guests. I often take branch managers there to thank them for their hard work. Good food makes people open up, so many good ideas started at that restaurant."},
  phone:{type:"comp",cat:"스마트폰 사용 변화",q:"How has the way people use smartphones changed over the past ten years?",ko:"지난 10년간 스마트폰 사용 방식은 어떻게 바뀌었나요?",
-  a:"Ten years ago, people mainly used smartphones for calls, messages, and some games. But now, we do almost everything with them. For example, we do banking, shopping, and even work meetings on our phones. In my case, I check sales results on my phone every day. This change made life much more convenient. However, people spend too much time on their phones, so we need a good balance."},
- friendR:{type:"role",cat:"친구에게 묻기 롤플레이",q:"Your friend recently went to a new restaurant. Call your friend and ask three or four questions about it.",ko:"친구가 새 식당에 다녀왔습니다. 전화해 3~4가지 질문하세요.",
-  a:"Hey, it's me. I heard you went to that new Italian restaurant last weekend. I was wondering if you could tell me about it. First, how was the food? What did you order? Second, is it expensive? And is it a good place for a family dinner? Lastly, do I need to make a reservation? Thanks a lot. I'm thinking of going there this Friday."},
- ticketP:{type:"roleP",cat:"예매 문제 롤플레이",q:"You booked movie tickets for you and your friend, but you can't go because of work. Call your friend, explain, and suggest some alternatives.",ko:"영화 예매를 했지만 일 때문에 못 가게 됐습니다. 친구에게 설명하고 대안을 제시하세요.",
-  a:"Hi, it's me. I'm really sorry, but I have bad news. I have to stay late at work tonight because of an urgent meeting, so I can't go to the movie. Unfortunately, I can't get a refund now. How about this? You could go with someone else and use my ticket. Or we could watch it together this Saturday, and I'll buy dinner. Would that work for you?"},
+  a:"Ten years ago, people mainly used smartphones for calls, messages, and some games. But now, we do almost everything with them. For example, we do banking, shopping, and even business meetings on our phones. In my case, I check our sales results, approve documents, and book golf tee times on my phone. I also track my jogging distance with an app. This change made life much more convenient. However, people spend too much time on their phones, so we need a good balance."},
+ friendR:{type:"role",cat:"친구에게 묻기 롤플레이",q:"Your friend recently played at a new golf course. Call your friend and ask three or four questions about it.",ko:"친구가 새 골프장에 다녀왔습니다. 전화해 3~4가지 질문하세요.",
+  a:"Hey, it's Daewoung. I heard you played at that new golf course last weekend. I'm thinking of going there with some clients, so I have a few questions. First, how was the course? Was it difficult? Second, how much was the green fee? Third, how long does it take to get there from Seoul? And lastly, is the clubhouse restaurant good for a business lunch? Thanks a lot. Let's play there together sometime soon."},
+ ticketP:{type:"roleP",cat:"약속 취소 롤플레이",q:"You promised to play golf with your friend this Saturday, but you can't go because of an urgent work event. Call your friend, explain, and suggest some alternatives.",ko:"토요일 골프 약속을 급한 업무로 못 가게 됐습니다. 친구에게 설명하고 대안을 제시하세요.",
+  a:"Hi, it's me. I'm really sorry, but I have bad news. I can't play golf with you this Saturday. Our CEO suddenly scheduled a meeting with all executives, so I have to attend. Unfortunately, it's too late to cancel the tee time. How about this? You could invite someone else and use my spot. Or we could play next Saturday, and I'll pay for lunch. Would that work for you? Again, I'm really sorry."},
  future:{type:"opin",cat:"미래 계획",q:"What would you like to do after you retire? Why?",ko:"은퇴 후에 무엇을 하고 싶나요? 이유는요?",
-  a:"After I retire, I'd like to do two things. First, I want to travel around the world with my wife, because we've been too busy to travel for a long time. Second, I want to share my experience with young people. For example, I could mentor people who are starting a sales career. I think staying active and helping others will keep me happy and healthy."},
+  a:"After I retire, I'd like to do three things. First, I want to travel around the world and play golf at famous courses, like in Scotland. Second, I want to run a full marathon, because I've been jogging for years and I want a big challenge. Third, I want to share my experience with young people. For example, I could mentor people who are starting a sales career. I think staying active and helping others will keep me happy and healthy."},
 };
+const FILLERS = [
+ {g:"시간 벌기",when:"질문을 듣고 바로 말이 안 나올 때",items:[
+  ["Well, let me think.","음, 잠깐 생각해 볼게요.","Well, let me think. I'd say my favorite place is the balcony."],
+  ["That's a good question.","좋은 질문이네요.","That's a good question. I've never really thought about it before."],
+  ["Let me see.","어디 보자.","Let me see. It was about two years ago."],
+  ["How can I put it?","뭐라고 말하면 좋을까요?","How can I put it? It was a really special moment for me."],
+  ["Hmm, it's hard to say, but","음, 말하기 어렵지만","Hmm, it's hard to say, but I think golf is my favorite."],
+  ["Actually,","사실은,","Actually, I go jogging almost every evening."]]},
+ {g:"의견 시작",when:"의견·선호 질문의 첫 문장",items:[
+  ["In my opinion,","제 생각에는,","In my opinion, AI will help people more than it hurts them."],
+  ["Personally, I think","개인적으로는 ~라고 생각해요","Personally, I think face-to-face meetings work better."],
+  ["To be honest,","솔직히 말하면,","To be honest, I was really nervous at first."],
+  ["As far as I know,","제가 알기로는,","As far as I know, most insurers use AI chatbots now."],
+  ["I'd say","~라고 할 수 있죠","I'd say jogging is the best way to relieve stress."]]},
+ {g:"덧붙이기",when:"내용을 늘려 문단을 만들 때",items:[
+  ["On top of that,","게다가,","On top of that, the weather was perfect."],
+  ["Not only that, but","그뿐만 아니라","Not only that, but the food was amazing."],
+  ["Also,","또한,","Also, I can focus better at the office."],
+  ["What's more,","더욱이,","What's more, it saves a lot of time."]]},
+ {g:"예시 들기",when:"주장 뒤에 근거를 붙일 때",items:[
+  ["For example,","예를 들면,","For example, customers sign contracts on a tablet."],
+  ["In my case,","제 경우에는,","In my case, I check sales results on my phone."],
+  ["Let me give you an example.","예를 하나 들어 볼게요.","Let me give you an example. Last year, we started a mentoring program."],
+  ["Like,","예컨대, 이를테면","I love outdoor sports, like golf and jogging."]]},
+ {g:"이유·결과",when:"because 대신 다양하게",items:[
+  ["The main reason is that","가장 큰 이유는 ~예요","The main reason is that my job is all about people."],
+  ["That's why","그래서 ~해요","That's why I'm learning English these days."],
+  ["Because of that,","그 때문에,","Because of that, more new agents stayed with us."],
+  ["As a result,","그 결과,","As a result, our retention rate went up."]]},
+ {g:"과거 이야기 전개",when:"경험 질문을 순서대로 말할 때",items:[
+  ["At first,","처음에는,","At first, I was really frustrated."],
+  ["Then suddenly,","그런데 갑자기,","Then suddenly, a strong wind came from the sea."],
+  ["After that,","그 후에,","After that, we all started laughing."],
+  ["In the end,","결국,","In the end, everything worked out fine."],
+  ["Since then,","그 이후로,","Since then, I always keep a backup."]]},
+ {g:"말 바로잡기",when:"말이 꼬였을 때 자연스럽게 수습",items:[
+  ["I mean,","그러니까 제 말은,","It was hard. I mean, really hard."],
+  ["What I'm trying to say is","제가 말하려는 건","What I'm trying to say is that listening comes first."],
+  ["Let me put it another way.","다르게 말해 볼게요.","Let me put it another way. Trust matters most in insurance."],
+  ["Sorry, I mean","아, 그러니까","We had twenty, sorry, I mean thirty managers there."]]},
+ {g:"꼬리질문 대응",when:"AI가 앞 답변을 이어 물을 때",items:[
+  ["As I mentioned before,","앞서 말씀드렸듯이,","As I mentioned before, I'm in charge of a sales organization."],
+  ["Like I said,","말씀드린 것처럼,","Like I said, jogging helps me clear my mind."],
+  ["To add to that,","거기에 덧붙이면,","To add to that, we also changed the incentive system."]]},
+ {g:"마무리",when:"답변을 깔끔하게 끝낼 때",items:[
+  ["Anyway, that's about it.","아무튼, 이 정도예요.","Anyway, that's about it. It was a great trip."],
+  ["All in all,","전반적으로 보면,","All in all, it was a valuable experience."],
+  ["So, that's why","그래서 그게 바로 ~한 이유예요","So, that's why I love playing golf."],
+  ["That's a little bit about","~에 대해서는 이 정도예요","That's a little bit about my daily routine."]]},
+];
 const SETS = {
  biz:{hint:"사무실 묘사, 업무 루틴, 프로젝트 문제해결, 회의실 예약 롤플레이, AI 기술 트렌드",ids:["intro","office","workday","project","colleague","colleague2","room","roomP","trip","change","ai","ai2","remote","env","goal"]},
- daily:{hint:"사는 곳·주말·건강, 여행 경험 콤보, 식당 롤플레이, 스마트폰 변화, 사회 이슈",ids:["intro","home","weekend","stress","health","travel","travel2","restaurant","friendR","ticketP","phone","change","ai","env","future"]},
+ daily:{hint:"사는 곳·골프 주말·조깅, 여행 경험 콤보, 골프 롤플레이, 스마트폰 변화, 사회 이슈",ids:["intro","home","weekend","stress","health","travel","travel2","restaurant","friendR","ticketP","phone","change","ai","env","future"]},
  mix:{hint:"전체 문항에서 실전 순서(자기소개→묘사→경험→롤플레이→비교→의견)로 무작위 출제",ids:null},
 };
 function buildMix(){
@@ -487,13 +620,14 @@ function startTest(){
  S={ids,i:0,answers:[],setName:$("#setSel").selectedOptions[0].textContent.split(" (")[0]};
  show("test");runQ();
 }
-function show(id){["setup","test","result"].forEach(x=>$("#"+x).hidden=x!==id);window.scrollTo(0,0)}
+function show(id){["setup","filler","test","result"].forEach(x=>$("#"+x).hidden=x!==id);$("#mainnav").hidden=!(id==="setup"||id==="filler");document.querySelectorAll("#mainnav button").forEach(b=>b.dataset.p===id?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));if(id!=="filler")fStop();window.scrollTo(0,0)}
+document.querySelectorAll("#mainnav button").forEach(b=>b.onclick=()=>{if(b.dataset.p==="filler")renderFiller();show(b.dataset.p)});
 let tick=null,recorder=null,chunks=[],recStart=0,elapsed=0,replayLeft=1,replayTimer=null,qPlaying=false;
 function setStatus(c,t){$("#sDot").className="dot "+c;$("#sTxt").textContent=t}
 function setProg(sec){$("#progI").style.width=Math.min(100,sec/120*100)+"%";$("#tmVal").textContent=fmt(sec)}
 async function runQ(){
  const q=Q[S.ids[S.i]];const n=S.ids.length;
- $("#qBadge").textContent=`Q${S.i+1} / ${n}`;$("#qCat").textContent=q.cat;
+ $("#qBadge").textContent=`Q${S.i+1} / ${n}`;$("#qCat").textContent=q.cat;updLive();
  const coach=cfg.mode==="coach";S.cap=coach;
  $("#qEn").textContent=q.q;$("#qKo").textContent=q.ko;$("#qCap").hidden=!coach;$("#capBtn").textContent=coach?"질문 텍스트 숨기기":"질문 텍스트 보기";
  $("#coach").hidden=!coach;
@@ -614,6 +748,71 @@ OPIc 기준(과제 수행, 정확성, 내용, 문장 구성)으로 각각 5점 �
 };
 $("#againBtn").onclick=()=>{renderSetup();show("setup")};
 $("#retryBtn").onclick=()=>{S.ids=SETS[cfg.set].ids||buildMix();startTest()};
+
+/* ===================== MID-CHECK ===================== */
+function curAnswers(){const A=S.answers.slice();const t=$("#ans").value.trim();if(t||elapsed>3)A.push({id:S.ids[S.i],text:t,sec:Math.round(elapsed),words:words(t),cur:true});return A}
+function updLive(){const n=S.answers.length;if(!n){$("#liveChip").hidden=true;return}const r=estimate(S.answers);$("#liveChip").hidden=false;$("#liveChip").textContent=`현재 예상 ${r.level} · ${n}문항`}
+$("#midBtn").onclick=()=>{
+ const A=curAnswers();const tg=cfg.target;
+ if(!A.length){toast("한 문항 이상 답한 뒤에 중간 채점을 볼 수 있어요");return}
+ const r=estimate(A);const myI=LEVELS.indexOf(r.level),tgI=LEVELS.indexOf(tg);
+ $("#midLv").textContent=r.level;
+ $("#midCnt").textContent=`${A.length}문항 기준`+(A.some(a=>a.cur)?" (지금 답변 포함)":"");
+ $("#midMsg").textContent=myI>=tgI?`목표 ${tg} 달성 페이스`:`목표 ${tg}까지 ${tgI-myI}단계`;
+ $("#midLadder").innerHTML=LEVELS.map((l,k)=>`<span class="${k===myI?"me":""} ${k===tgI?"tg":""}">${l}</span>`).join("");
+ $("#midSec").textContent=Math.round(r.avgS)+"초";$("#midW").textContent=Math.round(r.avgW);$("#midC").textContent=r.conn.toFixed(1);
+ const need=TARGET[tg];let tip;
+ if(r.avgW<40)tip=`답변 분량이 가장 시급합니다. 지금 평균 ${Math.round(r.avgW)}단어인데 ${tg}는 보통 80단어 이상입니다. 3단 템플릿을 끝까지 채워 보세요.`;
+ else if(r.avgS&&r.avgS<need)tip=`평균 ${Math.round(r.avgS)}초로 목표선(${need}초)보다 짧습니다. 예시 한 문장과 마무리 한 문장만 더해도 기준선을 넘습니다.`;
+ else if(r.conn<2.5)tip="분량은 괜찮지만 문장이 끊겨 들립니다. because, for example, since then 같은 연결어를 문항당 3개 이상 넣어 보세요.";
+ else if(r.wpm&&r.wpm<70)tip=`발화 속도가 ${Math.round(r.wpm)} WPM으로 느린 편입니다. 침묵 대신 필러(Well, let me think)로 공백을 메우세요.`;
+ else tip="분량·속도·연결 모두 좋은 페이스입니다. 남은 문항도 이 흐름을 유지하고, 과거 질문에서는 과거 시제를 꼭 지키세요.";
+ $("#midTip").textContent="💡 "+tip;
+ $("#midWarn").hidden=A.length>=3;$("#midWarn").textContent="아직 문항 수가 적어 정확도가 낮습니다. 3문항 이상부터 참고하세요.";
+ $("#mid").hidden=false};
+$("#midGo").onclick=()=>$("#mid").hidden=true;
+$("#mid").onclick=e=>{if(e.target.id==="mid")$("#mid").hidden=true};
+$("#midEnd").onclick=()=>{$("#mid").hidden=true;
+ if(recorder&&recorder.state==="recording")stopRec();
+ const t=$("#ans").value.trim();
+ setTimeout(()=>{if(t||S.audioUrl){S.answers.push({id:S.ids[S.i],text:t,sec:Math.round(elapsed),words:words(t),audio:S.audioUrl||null});S.audioUrl=null}stopAll();finish()},t||recorder?350:0)};
+
+/* ===================== FILLER STUDY ===================== */
+const FL=[];FILLERS.forEach(g=>g.items.forEach(([en,ko,ex])=>FL.push({g:g.g,when:g.when,en,ko,ex})));
+let known=new Set(ls("sail-fknown")||[]);
+const svgPlay='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const svgStar='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5 9-10"/></svg>';
+function renderFiller(){
+ $("#fTotal").textContent=FL.length;$("#fKnown").textContent=`✓ 외운 필러 ${known.size}개 / ${FL.length}`;
+ $("#fList").innerHTML=FILLERS.map(g=>`<div class="fgroup"><h3>${g.g}</h3><div class="when">${g.when}</div>${g.items.map(([en,ko,ex])=>`<div class="frow"><div class="tx"><div class="en">${esc(en)}</div><div class="ko">${esc(ko)}</div><div class="ex">${esc(ex)}</div></div><button class="ib" aria-label="듣기" data-fsay="${esc(en+" ... "+ex)}">${svgPlay}</button><button class="ib ${known.has(en)?"on":""}" aria-label="외움 표시" data-fk="${esc(en)}">${svgStar}</button></div>`).join("")}</div>`).join("");
+}
+$("#fList").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.fsay){speak(b.dataset.fsay,0.9)}else if(b.dataset.fk){const k=b.dataset.fk;known.has(k)?known.delete(k):known.add(k);ls("sail-fknown",[...known]);b.classList.toggle("on",known.has(k));$("#fKnown").textContent=`✓ 외운 필러 ${known.size}개 / ${FL.length}`}};
+document.querySelectorAll("[data-fm]").forEach(c=>c.onclick=()=>{fStop();document.querySelectorAll("[data-fm]").forEach(x=>x.setAttribute("aria-pressed",x===c));const m=c.dataset.fm;$("#fList").hidden=m!=="list";$("#fCard").hidden=m!=="card";$("#fListen").hidden=m!=="listen";if(m==="card"){fDeck();fShow()}if(m==="list")renderFiller()});
+let deck=[],fi=0,flip=false,fRange="all",fRecObj=null,fChunks=[];
+function fDeck(){deck=FL.filter(x=>fRange==="all"||!known.has(x.en)).sort(()=>Math.random()-.5);if(!deck.length)deck=FL.slice();fi=0;flip=false}
+function fShow(){const x=deck[fi];$("#fPos").textContent=`${fi+1} / ${deck.length}`;$("#fMyRow").hidden=true;
+ $("#fFace").innerHTML=flip?`<div class="sit">${esc(x.g)}</div><div class="big">${esc(x.en)}</div><div class="ex">${esc(x.ex)}</div><button class="sbtn" data-k="${esc(x.en)}" style="margin-top:6px;background:${known.has(x.en)?"#B45309":"var(--blue)"}">${known.has(x.en)?"외움 ✓ (취소)":"외웠어요"}</button>`
+ :`<div class="sit">${esc(x.g)} · ${esc(x.when)}</div><div class="big">${esc(x.ko)}</div><div style="font-size:13px;color:var(--sub)">영어로 예문을 만들어 말해 보고, 눌러서 확인</div>`}
+$("#fFace").onclick=e=>{const b=e.target.closest("[data-k]");if(b){const k=b.dataset.k;known.has(k)?known.delete(k):known.add(k);ls("sail-fknown",[...known]);fShow();return}flip=!flip;fShow();if(flip)speak(deck[fi].en+" ... "+deck[fi].ex,0.9)};
+$("#fNext").onclick=()=>{fi=(fi+1)%deck.length;flip=false;fShow()};$("#fPrev").onclick=()=>{fi=(fi-1+deck.length)%deck.length;flip=false;fShow()};
+document.querySelectorAll("[data-fr]").forEach(c=>c.onclick=()=>{fRange=c.dataset.fr;document.querySelectorAll("[data-fr]").forEach(x=>x.setAttribute("aria-pressed",x===c));fDeck();fShow()});
+$("#fNative").onclick=()=>speak(deck[fi].en+" ... "+deck[fi].ex,0.9);
+$("#fRec").onclick=async()=>{
+ if(fRecObj&&fRecObj.state==="recording"){fRecObj.stop();return}
+ try{await getMic()}catch(e){toast("마이크를 쓸 수 없어요. 권한을 확인해 주세요.");return}
+ fChunks=[];try{fRecObj=new MediaRecorder(stream)}catch(e){toast("이 브라우저는 녹음을 지원하지 않아요");return}
+ fRecObj.ondataavailable=e=>{if(e.data.size)fChunks.push(e.data)};
+ fRecObj.onstop=()=>{const u=URL.createObjectURL(new Blob(fChunks,{type:fRecObj.mimeType||"audio/webm"}));$("#fMy").src=u;$("#fMyRow").hidden=false;$("#fRec").textContent="내 발음 녹음";$("#fRec").style.background=""};
+ fRecObj.start();$("#fRec").textContent="■ 녹음 끝내기";$("#fRec").style.background="#0F172A";setTimeout(()=>{if(fRecObj&&fRecObj.state==="recording")fRecObj.stop()},10000)};
+let L={on:false,i:0,gen:0};
+function fStop(){L.on=false;L.gen++;synth&&synth.cancel();$("#fLPlay")&&($("#fLPlay").textContent="재생")}
+function koSpeak(t){return new Promise(res=>{if(!synth){res();return}const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";const v=voices.find(x=>/^ko/i.test(x.lang));if(v)u.voice=v;u.onend=res;u.onerror=res;synth.speak(u)})}
+async function fLoop(){const g=++L.gen;L.on=true;$("#fLPlay").textContent="일시정지";
+ while(L.on&&L.gen===g){const x=FL[L.i%FL.length];$("#fNow").textContent=x.en;$("#fNowKo").textContent=x.ko+" · "+x.ex;
+  await speak(x.en,0.85);if(L.gen!==g)return;await wait(700);await speak(x.ex,0.9);if(L.gen!==g)return;await wait(600);await koSpeak(x.ko);if(L.gen!==g)return;await wait(1500);L.i++}}
+$("#fLPlay").onclick=()=>{if(L.on)fStop();else fLoop()};
+$("#fLNext").onclick=()=>{L.i++;if(L.on)fLoop();else{const x=FL[L.i%FL.length];$("#fNow").textContent=x.en;$("#fNowKo").textContent=x.ko+" · "+x.ex}};
+$("#fLPrev").onclick=()=>{L.i=Math.max(0,L.i-1);if(L.on)fLoop();else{const x=FL[L.i%FL.length];$("#fNow").textContent=x.en;$("#fNowKo").textContent=x.ko+" · "+x.ex}};
 
 renderSetup();
 if(location.protocol!=="https:"&&!/^(localhost|127\.)/.test(location.hostname)){$("#micTest span").textContent="※ https 주소에서 열어야 마이크 녹음이 됩니다"}
