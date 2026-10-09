@@ -145,6 +145,45 @@ textarea::placeholder{color:#A0AEC0}
 .copybox{border:1.5px dashed #A5B4FC;background:#F8FAFF;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#0F172A;color:#fff;border-radius:999px;padding:10px 18px;font-size:14px;z-index:50}
 [hidden]{display:none!important}
+.fpfab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:35;border:0;border-radius:999px;background:#0F172A;color:#fff;font-size:15px;font-weight:800;padding:13px 18px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 22px rgba(15,23,42,.3)}
+.fpfab svg{width:18px;height:18px}
+.fpfab .n{background:#FCD34D;color:#0F172A;border-radius:999px;font-size:12px;padding:1px 7px}
+.fp{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:380px;max-height:min(70vh,640px);z-index:36;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 44px rgba(15,23,42,.22);display:flex;flex-direction:column;overflow:hidden}
+.fp-h{display:flex;align-items:center;gap:8px;padding:12px 12px 10px 16px;border-bottom:1px solid var(--line);background:var(--soft)}
+.fp-h b{font-size:15px;flex:1}
+.fp-h button{border:1px solid var(--line);background:#fff;border-radius:9px;font-size:13px;font-weight:700;color:var(--sub);padding:6px 10px}
+.fp-tabs{display:flex;gap:6px;padding:10px 12px 0}
+.fp-tabs button{border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;font-size:13px;font-weight:700;padding:6px 11px}
+.fp-tabs button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.fp-note{font-size:12px;color:var(--sub);padding:8px 16px 0}
+.fp-note.rec{color:var(--red);font-weight:700}
+.fp-b{overflow:auto;padding:6px 12px 14px;-webkit-overflow-scrolling:touch}
+.fp-g{font-size:12px;font-weight:800;color:var(--blue);margin:12px 4px 4px;letter-spacing:.02em}
+.fp-i{display:flex;align-items:flex-start;gap:8px;padding:8px 6px;border-radius:10px;cursor:pointer}
+.fp-i:hover{background:var(--soft)}
+.fp-i .tx{flex:1;min-width:0}
+.fp-i .en{font-size:15.5px;font-weight:800;line-height:1.35}
+.fp-i .ko{font-size:12.5px;color:var(--sub)}
+.fp-i .ex{font-size:13px;color:#334155;margin-top:3px;display:none}
+.fp-i.open .ex{display:block}
+.fp-i .st{font-size:11px;font-weight:800;border-radius:6px;padding:2px 6px;flex:none;margin-top:2px}
+.fp-i .st.used{background:#ECFDF5;color:var(--greenInk)}
+.fp-i .st.rep{background:#FFFBEB;color:#B45309}
+.fp-i .pl{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;flex:none;color:var(--ink)}
+.fp-i .pl svg{width:14px;height:14px}
+.fp-i .pl[disabled]{opacity:.35}
+.fp.small{max-height:200px}
+body.fp-on .page{padding-bottom:calc(min(70vh,640px) + 24px)}
+body.fp-on.fp-small .page{padding-bottom:230px}
+@media (min-width:1100px){body.fp-on .page{padding-bottom:32px;padding-right:420px}body.fp-on .fp{max-height:calc(100vh - 32px)}}
+@media (max-width:820px){
+  .fp{left:0;right:0;bottom:0;width:auto;border-radius:18px 18px 0 0;max-height:46vh;padding-bottom:env(safe-area-inset-bottom)}
+  .fp.small{max-height:150px}
+  body.fp-on .page{padding-bottom:calc(46vh + 16px)}
+  body.fp-on.fp-small .page{padding-bottom:166px}
+}
+.optrow{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px;font-weight:600;cursor:pointer}
+.optrow input{width:18px;height:18px;accent-color:var(--blue)}
 .mainnav{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;align-self:flex-start;box-shadow:0 2px 10px rgba(15,23,42,.04)}
 .mainnav button{border:0;background:transparent;color:var(--sub);font-size:15px;font-weight:700;border-radius:10px;padding:10px 18px}
 .mainnav button[aria-current="page"]{background:var(--blue);color:#fff}
@@ -253,6 +292,7 @@ textarea::placeholder{color:#A0AEC0}
         <button class="mode" role="radio" aria-checked="true" data-mode="exam"><span class="radio"></span><span><b>실전 시험 모드 (실전과 동일)</b><small>질문 자막 없이 음성만 청취 (실제 시험장 긴장감 유지)</small></span></button>
         <button class="mode" role="radio" aria-checked="false" data-mode="coach"><span class="radio"></span><span><b>코칭 트레이닝 모드 (처음 응시자용)</b><small>질문 자막 + 실시간 3단 답변 템플릿 및 추천 필러 노출</small></span></button>
       </div>
+      <label class="optrow"><input type="checkbox" id="fpAuto"> 시험 중 필러 팝업을 띄워 두고 참고하기 (언제든 '필러' 버튼으로 열고 닫기)</label>
     </div>
   </section>
 
@@ -401,6 +441,14 @@ textarea::placeholder{color:#A0AEC0}
 
 </div>
 
+<button class="fpfab" id="fpFab" hidden aria-label="필러 팝업 열기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>필러 <span class="n" id="fpUsedN" hidden>0</span></button>
+<aside class="fp" id="fp" hidden aria-label="필러 참고">
+  <div class="fp-h"><b>필러 참고</b><button id="fpSize">작게</button><button id="fpClose">닫기</button></div>
+  <div class="fp-tabs"><button data-ft="rec" aria-pressed="true">이 문항 추천</button><button data-ft="all" aria-pressed="false">전체</button><button data-ft="known" aria-pressed="false">외운 것</button></div>
+  <div class="fp-note" id="fpNote"></div>
+  <div class="fp-b" id="fpBody"></div>
+</aside>
+
 <div class="modal" id="mid" hidden>
   <div class="box">
     <div style="display:flex;justify-content:space-between;align-items:center"><span class="pill" style="color:var(--blue);background:var(--blueSoft);border-color:#BFD3FF">중간 채점</span><span id="midCnt" style="font-size:13px;color:var(--sub)"></span></div>
@@ -527,6 +575,18 @@ const FILLERS = [
   ["What I'm trying to say is","제가 말하려는 건","What I'm trying to say is that listening comes first."],
   ["Let me put it another way.","다르게 말해 볼게요.","Let me put it another way. Trust matters most in insurance."],
   ["Sorry, I mean","아, 그러니까","We had twenty, sorry, I mean thirty managers there."]]},
+ {g:"롤플레이 질문하기",when:"전화로 질문 3~4개를 해야 할 때",items:[
+  ["I'm calling because","~때문에 전화드렸어요","I'm calling because I'd like to book a meeting room."],
+  ["I was wondering if","혹시 ~인지 궁금해서요","I was wondering if there's a room for twenty people."],
+  ["Could you tell me","~를 알려 주실 수 있나요","Could you tell me how much the green fee is?"],
+  ["Do you happen to know","혹시 ~ 아세요?","Do you happen to know if the restaurant takes reservations?"],
+  ["One more thing,","하나만 더요,","One more thing, can we order coffee for the meeting?"]]},
+ {g:"롤플레이 문제 해결",when:"사과하고 대안을 제시할 때",items:[
+  ["I'm afraid","유감이지만 ~예요","I'm afraid there's a problem with our meeting."],
+  ["Unfortunately,","안타깝게도,","Unfortunately, I can't make it this Saturday."],
+  ["How about","~하는 건 어때요?","How about playing next Saturday instead?"],
+  ["Or we could","아니면 ~할 수도 있어요","Or we could hold the meeting online."],
+  ["Would that work for you?","그렇게 해도 괜찮으세요?","I'll buy lunch. Would that work for you?"]]},
  {g:"꼬리질문 대응",when:"AI가 앞 답변을 이어 물을 때",items:[
   ["As I mentioned before,","앞서 말씀드렸듯이,","As I mentioned before, I'm in charge of a sales organization."],
   ["Like I said,","말씀드린 것처럼,","Like I said, jogging helps me clear my mind."],
@@ -620,14 +680,14 @@ function startTest(){
  S={ids,i:0,answers:[],setName:$("#setSel").selectedOptions[0].textContent.split(" (")[0]};
  show("test");runQ();
 }
-function show(id){["setup","filler","test","result"].forEach(x=>$("#"+x).hidden=x!==id);$("#mainnav").hidden=!(id==="setup"||id==="filler");document.querySelectorAll("#mainnav button").forEach(b=>b.dataset.p===id?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));if(id!=="filler")fStop();window.scrollTo(0,0)}
+function show(id){["setup","filler","test","result"].forEach(x=>$("#"+x).hidden=x!==id);$("#mainnav").hidden=!(id==="setup"||id==="filler");document.querySelectorAll("#mainnav button").forEach(b=>b.dataset.p===id?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));if(id!=="filler")fStop();fpSync(id==="test");window.scrollTo(0,0)}
 document.querySelectorAll("#mainnav button").forEach(b=>b.onclick=()=>{if(b.dataset.p==="filler")renderFiller();show(b.dataset.p)});
 let tick=null,recorder=null,chunks=[],recStart=0,elapsed=0,replayLeft=1,replayTimer=null,qPlaying=false;
 function setStatus(c,t){$("#sDot").className="dot "+c;$("#sTxt").textContent=t}
 function setProg(sec){$("#progI").style.width=Math.min(100,sec/120*100)+"%";$("#tmVal").textContent=fmt(sec)}
 async function runQ(){
  const q=Q[S.ids[S.i]];const n=S.ids.length;
- $("#qBadge").textContent=`Q${S.i+1} / ${n}`;$("#qCat").textContent=q.cat;updLive();
+ $("#qBadge").textContent=`Q${S.i+1} / ${n}`;$("#qCat").textContent=q.cat;updLive();fpQ(q);
  const coach=cfg.mode==="coach";S.cap=coach;
  $("#qEn").textContent=q.q;$("#qKo").textContent=q.ko;$("#qCap").hidden=!coach;$("#capBtn").textContent=coach?"질문 텍스트 숨기기":"질문 텍스트 보기";
  $("#coach").hidden=!coach;
@@ -655,7 +715,7 @@ $("#capBtn").onclick=()=>{S.cap=!S.cap;$("#qCap").hidden=!S.cap;$("#capBtn").tex
 $("#modelBtn").onclick=()=>{const h=$("#modelBox").hidden;$("#modelBox").hidden=!h;$("#modelBtn").textContent=h?"모범답안 숨기기":"모범답안 보기"};
 $("#quitBtn").onclick=()=>{if(!confirm("모의평가를 중단할까요? 지금까지 답한 문항으로 결과를 볼 수 있습니다."))return;stopAll();if(S.answers.length)finish();else show("setup")};
 
-function recBtnState(s){
+function recBtnState(s){fpRec(s==="rec");
  const r=$("#recBtn"),st=$("#stopBtn");
  if(s==="idle"){r.disabled=false;$("#recTxt").textContent="마이크 녹음 시작";st.disabled=true;st.classList.remove("on");$("#waveTxt").textContent="마이크 녹음 대기 중"}
  if(s==="rec"){r.disabled=true;$("#recTxt").textContent="녹음 중...";st.disabled=false;st.classList.add("on");$("#waveTxt").textContent="녹음 중 · 또렷하게 말해 주세요"}
@@ -679,7 +739,7 @@ function stopRec(){clearInterval(tick);srStop();if(recorder&&recorder.state==="r
 $("#stopBtn").onclick=stopRec;
 function stopAll(){clearTimeout(replayTimer);synth&&synth.cancel();if(recorder&&recorder.state==="recording")stopRec();clearInterval(tick)}
 $("#ans").addEventListener("input",updWC);
-function updWC(){const w=words($("#ans").value);$("#wc").textContent=w+" words";const sec=elapsed>3?elapsed:0;$("#wpm").textContent=(sec?Math.round(w/(sec/60)):0)+" WPM"}
+function updWC(){fpUsage();const w=words($("#ans").value);$("#wc").textContent=w+" words";const sec=elapsed>3?elapsed:0;$("#wpm").textContent=(sec?Math.round(w/(sec/60)):0)+" WPM"}
 
 $("#nextBtn").onclick=()=>{
  const text=$("#ans").value.trim();
@@ -813,6 +873,60 @@ async function fLoop(){const g=++L.gen;L.on=true;$("#fLPlay").textContent="일�
 $("#fLPlay").onclick=()=>{if(L.on)fStop();else fLoop()};
 $("#fLNext").onclick=()=>{L.i++;if(L.on)fLoop();else{const x=FL[L.i%FL.length];$("#fNow").textContent=x.en;$("#fNowKo").textContent=x.ko+" · "+x.ex}};
 $("#fLPrev").onclick=()=>{L.i=Math.max(0,L.i-1);if(L.on)fLoop();else{const x=FL[L.i%FL.length];$("#fNow").textContent=x.en;$("#fNowKo").textContent=x.ko+" · "+x.ex}};
+
+/* ===================== FILLER POPUP (during test) ===================== */
+const FP_GROUPS={
+ intro:["시간 벌기","덧붙이기","마무리"],
+ desc:["시간 벌기","덧붙이기","예시 들기","마무리"],
+ past:["과거 이야기 전개","시간 벌기","말 바로잡기","마무리"],
+ comp:["예시 들기","이유·결과","의견 시작","마무리"],
+ role:["롤플레이 질문하기","시간 벌기"],
+ roleP:["롤플레이 문제 해결","말 바로잡기"],
+ opin:["의견 시작","이유·결과","예시 들기","마무리"],
+};
+const fpst=Object.assign({open:false,tab:"rec",small:false},ls("sail-fp")||{});
+if(cfg.fpAuto===undefined)cfg.fpAuto=true;
+$("#fpAuto").checked=!!cfg.fpAuto;
+$("#fpAuto").onchange=e=>{cfg.fpAuto=e.target.checked;ls("sail-cfg",cfg)};
+let fpType="intro",fpRecOn=false,fpInTest=false,fpOpenIdx=new Set();
+function fpSave(){ls("sail-fp",{open:fpst.open,tab:fpst.tab,small:fpst.small})}
+function fpNorm(t){return t.toLowerCase().replace(/[~.,?!]/g," ").replace(/\s+/g," ").trim()}
+function fpCount(text,en){const k=fpNorm(en);if(k.length<3)return 0;const h=" "+fpNorm(text)+" ";let n=0,i=0;while((i=h.indexOf(" "+k+" ",i))!==-1){n++;i+=k.length}return n}
+function fpItems(){
+ if(fpst.tab==="known"){const ks=new Set(ls("sail-fknown")||[]);return FILLERS.map(g=>({g:g.g,items:g.items.filter(x=>ks.has(x[0]))})).filter(g=>g.items.length)}
+ if(fpst.tab==="all")return FILLERS.map(g=>({g:g.g,items:g.items}));
+ const want=(S&&S.i>0?["꼬리질문 대응"]:[]).concat(FP_GROUPS[fpType]||[]);
+ return want.map(n=>FILLERS.find(g=>g.g===n)).filter(Boolean).map(g=>({g:g.g,items:g.items}));
+}
+function fpRender(){
+ if($("#fp").hidden)return;
+ document.querySelectorAll("[data-ft]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.ft===fpst.tab));
+ const groups=fpItems();const text=$("#ans").value;
+ const note=$("#fpNote");
+ if(fpRecOn){note.className="fp-note rec";note.textContent="● 녹음 중 · 소리 재생은 꺼집니다. 눈으로 보고 말하세요."}
+ else{note.className="fp-note";note.textContent=fpst.tab==="rec"?`지금 질문 유형(${T[fpType].t.replace(/ ?3단| 템플릿/g,"")})에 맞는 필러입니다. 누르면 예문이 보여요.`:fpst.tab==="known"?"필러 학습에서 '외웠어요'로 표시한 것만 모았습니다.":"전체 필러입니다. 누르면 예문이 보여요."}
+ if(!groups.length){$("#fpBody").innerHTML=`<div style="padding:18px 6px;font-size:14px;color:var(--sub)">아직 외운 필러가 없어요. 상단 '필러 학습' 메뉴에서 외운 필러에 체크하면 여기에 모입니다.</div>`;return}
+ $("#fpBody").innerHTML=groups.map(g=>`<div class="fp-g">${esc(g.g)}</div>`+g.items.map(([en,ko,ex])=>{const c=text?fpCount(text,en):0;const id=g.g+"|"+en;
+  return `<div class="fp-i ${fpOpenIdx.has(id)?"open":""}" data-id="${esc(id)}"><div class="tx"><div class="en">${esc(en)}</div><div class="ko">${esc(ko)}</div><div class="ex">${esc(ex)}</div></div>${c>=2?`<span class="st rep">${c}번 반복</span>`:c===1?`<span class="st used">사용 ✓</span>`:""}<button class="pl" data-say="${esc(en)}" aria-label="듣기" ${fpRecOn?"disabled":""}><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button></div>`}).join("")).join("");
+}
+function fpUsage(){
+ if(!fpInTest)return;const text=$("#ans").value;let used=0;
+ FILLERS.forEach(g=>g.items.forEach(([en])=>{if(fpCount(text,en))used++}));
+ $("#fpUsedN").hidden=!used;$("#fpUsedN").textContent=used;
+ if(!$("#fp").hidden){clearTimeout(fpUsage.t);fpUsage.t=setTimeout(fpRender,250)}
+}
+function fpShow(open){fpst.open=open;fpSave();$("#fp").hidden=!open||!fpInTest;$("#fpFab").hidden=open||!fpInTest;
+ document.body.classList.toggle("fp-on",open&&fpInTest);document.body.classList.toggle("fp-small",!!fpst.small);
+ $("#fp").classList.toggle("small",!!fpst.small);$("#fpSize").textContent=fpst.small?"크게":"작게";if(open)fpRender()}
+function fpSync(inTest){const was=fpInTest;fpInTest=inTest;if(inTest&&!was)fpShow(!!cfg.fpAuto);else if(!inTest){$("#fp").hidden=true;$("#fpFab").hidden=true;document.body.classList.remove("fp-on","fp-small")}}
+function fpQ(q){fpType=q.type;fpOpenIdx.clear();$("#fpUsedN").hidden=true;fpRender();const b=$("#fpBody");if(b)b.scrollTop=0}
+function fpRec(on){fpRecOn=on;fpRender()}
+$("#fpFab").onclick=()=>fpShow(true);
+$("#fpClose").onclick=()=>fpShow(false);
+$("#fpSize").onclick=()=>{fpst.small=!fpst.small;fpSave();fpShow(true)};
+document.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{fpst.tab=b.dataset.ft;fpSave();fpOpenIdx.clear();fpRender();$("#fpBody").scrollTop=0});
+$("#fpBody").onclick=e=>{const p=e.target.closest(".pl");if(p){if(!fpRecOn&&!p.disabled)speak(p.dataset.say,0.9);return}
+ const it=e.target.closest(".fp-i");if(!it)return;const id=it.dataset.id;fpOpenIdx.has(id)?fpOpenIdx.delete(id):fpOpenIdx.add(id);it.classList.toggle("open")};
 
 renderSetup();
 if(location.protocol!=="https:"&&!/^(localhost|127\.)/.test(location.hostname)){$("#micTest span").textContent="※ https 주소에서 열어야 마이크 녹음이 됩니다"}
